@@ -11,10 +11,10 @@ Ce projet est une application Streamlit interactive pour prédire le churn des c
 
 ## 📁 Structure
 - `streamlitApp.py` : App principale
+- `model_xgboost_churn.joblib` : Modèle XGBoost
 - `model_lightgbm_churn.joblib` : Modèle LightGBM
 - `scaler_churn.joblib` / `scaler_features.joblib` : Standardisation
 - `features.joblib` : Liste des variables utilisées
-- `pca.joblib` : (optionnel) réduction de dimension
 
 ## ▶️ Lancer l'application
 
