@@ -32,3 +32,12 @@ Bienvenue dans ce projet de **détection du churn client** basé sur un jeu de d
 ├── NoteBook.ipynb # Exploration initiale et entraînement du modèle
 ├── LICENSE # Licence du projet (MIT)
 ├── README.md # Documentation (ce fichier)
+
+
+---
+
+## 👤 Auteur
+
+Développé par **El Mehdi El Youbi Rmich**  
+📍 Maroc | 📧 mehdi.eloubi@gmail.com  
+🔗 [LinkedIn](https://www.linkedin.com/in/el-mehdi-el-youbi-rmich-574941249/)  
