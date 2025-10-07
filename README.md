@@ -27,12 +27,12 @@ Bienvenue dans ce projet de **détection du churn client** basé sur un jeu de d
 ---
 
 ## 📁 Structure du projet
-
+```
 ├── streamlitApp.py # Application Streamlit principale
 ├── NoteBook.ipynb # Exploration initiale et entraînement du modèle
 ├── LICENSE # Licence du projet (MIT)
 ├── README.md # Documentation (ce fichier)
-
+```
 
 ---
 
