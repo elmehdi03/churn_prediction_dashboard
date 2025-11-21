@@ -163,10 +163,10 @@ The `NoteBook.ipynb` notebook contains the complete pipeline:
 ### 7. **Final Results**
    - **Optimized LightGBM (threshold 0.300):**
      - ROC-AUC: **0.7263**
-     - Accuracy: **65.38%**
-     - Precision: **76%**
-     - Recall: **62%** (detects 62% of churners)
-     - F1-Score: **0.68**
+     - Accuracy: **~64%**
+     - Precision: **~58%**
+     - Recall: **~82%** (detects 82% of churners)
+     - F1-Score: **~0.68**
      - **Decision threshold: 0.300** (optimized for profit)
 
 ---
@@ -180,7 +180,7 @@ The `NoteBook.ipynb` notebook contains the complete pipeline:
 | Recall | 61% | 62% | +1% |
 | F1-Score | 0.68 | 0.68 | Stable |
 
-**Business impact:** On 120,925 churners in the test set, the optimized model detects **~75,000**, approximately 600 additional customers compared to the baseline model.
+**Business impact:** On 120,925 churners in the test set, the optimized model with threshold 0.300 detects **~100,000**, significantly outperforming the default 0.5 threshold (~75,000). The lower threshold prioritizes catching more churners at the cost of some false positives, maximizing business profit based on cost-benefit analysis.
 
 ---
 

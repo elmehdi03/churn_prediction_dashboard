@@ -420,9 +420,9 @@ elif section == "📈 Performance du modèle":
         <div class='reco-box'>
             <h4>📌 Analyse des performances:</h4>
             <ul>
-                <li><b>ROC-AUC: 0.726</b> - Bonne capacité de discrimination</li>
-                <li><b>Recall: 62%</b> - Le modèle détecte 62% des churners</li>
-                <li><b>Precision: 76%</b> - 76% des prédictions de churn sont correctes</li>
+                <li><b>ROC-AUC: 0.697</b> - Bonne capacité de discrimination</li>
+                <li><b>Recall: 82.79%</b> - Le modèle détecte 82.79% des churners</li>
+                <li><b>Precision: 65.1%</b> - 65.1% des prédictions de churn sont correctes</li>
                 <li><b>Optimisé avec Optuna</b> - 50 trials d'optimisation bayésienne</li>
             </ul>
         </div>
