@@ -80,22 +80,22 @@ The application will automatically open in your browser at `http://localhost:850
 ```
 churn_prediction_dashboard/
 ├── data/                                    # Data
-│   ├── synthetic_moroccan_churn_1M.csv     # RAW dataset (1M rows, 11 columns)
+│   ├── synthetic_moroccan_churn_1M.csv      # RAW dataset (1M rows, 11 columns)
 │   └── README.md                            # Data documentation
 ├── models/                                  # Trained models and artifacts
-│   ├── model_lightgbm_churn.joblib         # LightGBM model (baseline)
-│   ├── model_lightgbm_tuned_churn.joblib   # LightGBM model (optimized)
-│   ├── model_xgboost_churn.joblib          # XGBoost model
-│   ├── model_best_churn.joblib             # Best model
-│   ├── best_hyperparameters.joblib         # Optimal hyperparameters
+│   ├── model_lightgbm_churn.joblib          # LightGBM model (baseline)
+│   ├── model_lightgbm_tuned_churn.joblib    # LightGBM model (optimized)
+│   ├── model_xgboost_churn.joblib           # XGBoost model
+│   ├── model_best_churn.joblib              # Best model
+│   ├── best_hyperparameters.joblib          # Optimal hyperparameters
 │   ├── encoder.joblib                       # OneHotEncoder
-│   ├── scaler_churn.joblib                 # StandardScaler
+│   ├── scaler_churn.joblib                  # StandardScaler
 │   ├── features.joblib                      # Feature names (60)
 │   ├── categorical_columns.joblib           # Categorical columns
 │   ├── numerical_columns.joblib             # Numerical columns
 │   ├── binary_columns.joblib                # Binary columns
-│   ├── scaler_features.joblib              # Features to standardize
-│   ├── optimal_threshold.joblib            # Optimal threshold (0.300)
+│   ├── scaler_features.joblib               # Features to standardize
+│   ├── optimal_threshold.joblib             # Optimal threshold (0.300)
 │   └── README.md                            # Model documentation
 ├── streamlitApp.py                          # Main Streamlit application
 ├── NoteBook.ipynb                           # Complete ML pipeline (24 cells)
@@ -189,3 +189,4 @@ The `NoteBook.ipynb` notebook contains the complete pipeline:
 Developed by **El Mehdi EL YOUBI RMICH**  
 📍 Morocco | 📧 mehdi.eloubi@gmail.com  
 🔗 [LinkedIn](https://www.linkedin.com/in/el-mehdi-el-youbi-rmich-574941249/)  
+
