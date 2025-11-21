@@ -263,7 +263,7 @@ st.markdown("---")
 st.sidebar.markdown("## 🔍 Navigation")
 section = st.sidebar.radio(
     "Choisissez une section:",
-    ["📊 Distribution du churn", "🎯 Feature Importance", "📈 Performance du modèle", "🔥 Heatmap corrélation", "⚠️ Clients à risques"],
+    ["📊 Distribution du churn", "🎯 Feature Importance", "📈 Performance du modèle", "📊 Analyse Lift", "🔥 Heatmap corrélation", "⚠️ Clients à risques"],
     label_visibility="collapsed"
 )
 
@@ -428,7 +428,138 @@ elif section == "📈 Performance du modèle":
         </div>
         """, unsafe_allow_html=True)
 
-# 4) Heatmap corrélation
+# 4) Analyse Lift
+elif section == "📊 Analyse Lift":
+    st.subheader("📊 Lift Analysis - Model Performance vs Random Targeting")
+    
+    st.info("""
+    **Lift** measures how much better the model performs compared to random targeting.  
+    - **Lift = 1.0**: Model no better than random  
+    - **Lift = 2.0**: Model is 2x better than random  
+    - **Lift = 3.0**: Model is 3x better (excellent)
+    """)
+    
+    # Calculate lift metrics
+    df_lift = pd.DataFrame({
+        'y_true': y_true,
+        'y_prob': y_probs
+    }).sort_values('y_prob', ascending=False).reset_index(drop=True)
+    
+    percentiles = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    lift_results = []
+    baseline_churn_rate = y_true.mean()
+    
+    for pct in percentiles:
+        n_customers = int(len(df_lift) * pct / 100)
+        top_n = df_lift.head(n_customers)
+        actual_churn_rate = top_n['y_true'].mean()
+        lift = actual_churn_rate / baseline_churn_rate if baseline_churn_rate > 0 else 0
+        churners_captured = top_n['y_true'].sum()
+        total_churners = y_true.sum()
+        capture_rate = churners_captured / total_churners if total_churners > 0 else 0
+        
+        lift_results.append({
+            'percentile': pct,
+            'lift': lift,
+            'churn_rate': actual_churn_rate,
+            'capture_rate': capture_rate * 100
+        })
+    
+    lift_df = pd.DataFrame(lift_results)
+    
+    # Display key metrics
+    col1, col2, col3 = st.columns(3)
+    max_lift = lift_df['lift'].max()
+    max_lift_pct = lift_df[lift_df['lift'] == max_lift]['percentile'].values[0]
+    top20_lift = lift_df[lift_df['percentile'] == 20]['lift'].values[0]
+    top20_capture = lift_df[lift_df['percentile'] == 20]['capture_rate'].values[0]
+    
+    with col1:
+        st.metric("🎯 Max Lift", f"{max_lift:.2f}x", f"at top {max_lift_pct}%")
+    with col2:
+        st.metric("📈 Top 20% Lift", f"{top20_lift:.2f}x", f"{(top20_lift-1)*100:.0f}% vs random")
+    with col3:
+        st.metric("✅ Top 20% Captures", f"{top20_capture:.1f}%", "of all churners")
+    
+    st.markdown("---")
+    
+    # Visualizations
+    col_chart1, col_chart2 = st.columns(2)
+    
+    with col_chart1:
+        st.markdown("### 📈 Lift Curve")
+        fig_lift = go.Figure()
+        fig_lift.add_trace(go.Scatter(
+            x=lift_df['percentile'], y=lift_df['lift'],
+            mode='lines+markers', name='Model Lift',
+            line=dict(color='#0288d1', width=3),
+            marker=dict(size=8)
+        ))
+        fig_lift.add_hline(y=1.0, line_dash="dash", line_color="red", 
+                          annotation_text="Random (Lift=1.0)")
+        fig_lift.update_layout(
+            xaxis_title="Top N% of Customers Targeted",
+            yaxis_title="Lift",
+            template='plotly_white',
+            height=400
+        )
+        st.plotly_chart(fig_lift, width='stretch')
+    
+    with col_chart2:
+        st.markdown("### 📊 Cumulative Gains")
+        fig_gains = go.Figure()
+        fig_gains.add_trace(go.Scatter(
+            x=lift_df['percentile'], y=lift_df['capture_rate'],
+            mode='lines+markers', name='Model',
+            line=dict(color='#00897b', width=3),
+            marker=dict(size=8)
+        ))
+        fig_gains.add_trace(go.Scatter(
+            x=[0, 100], y=[0, 100],
+            mode='lines', name='Random',
+            line=dict(color='red', width=2, dash='dash')
+        ))
+        fig_gains.update_layout(
+            xaxis_title="% of Customers Targeted",
+            yaxis_title="% of Churners Captured",
+            template='plotly_white',
+            height=400
+        )
+        st.plotly_chart(fig_gains, width='stretch')
+    
+    st.markdown("---")
+    
+    # Detailed table
+    st.markdown("### 📋 Lift Performance by Segment")
+    lift_display = lift_df.copy()
+    lift_display['churn_rate'] = lift_display['churn_rate'].apply(lambda x: f"{x:.2%}")
+    lift_display['lift'] = lift_display['lift'].apply(lambda x: f"{x:.2f}x")
+    lift_display['capture_rate'] = lift_display['capture_rate'].apply(lambda x: f"{x:.1f}%")
+    lift_display.columns = ['Top N%', 'Lift', 'Churn Rate', '% Churners Captured']
+    st.dataframe(lift_display, width='stretch')
+    
+    # Business insights
+    st.markdown("---")
+    st.markdown("### 💡 Business Insights")
+    col_insight1, col_insight2 = st.columns(2)
+    
+    with col_insight1:
+        st.success(f"""
+        **Model Effectiveness**
+        - Targeting top 20% is **{top20_lift:.1f}x better** than random
+        - Captures **{top20_capture:.0f}%** of churners with only 20% effort
+        - Efficiency gain: **{(top20_lift-1)*100:.0f}%** over random targeting
+        """)
+    
+    with col_insight2:
+        st.info(f"""
+        **Recommendation**
+        - Focus retention campaigns on top **{max_lift_pct}%** for maximum lift ({max_lift:.2f}x)
+        - Balance coverage vs efficiency based on budget
+        - Top 30% captures ~{lift_df[lift_df['percentile']==30]['capture_rate'].values[0]:.0f}% of churners
+        """)
+
+# 5) Heatmap corrélation
 elif section == "🔥 Heatmap corrélation":
     st.subheader("🔥 Heatmap de corrélation")
     
@@ -465,7 +596,7 @@ elif section == "🔥 Heatmap corrélation":
     </div>
     """, unsafe_allow_html=True)
 
-# 5) Clients à risques
+# 6) Clients à risques
 else:
     st.subheader("⚠️ Identification des Clients à Haut Risque")
     
